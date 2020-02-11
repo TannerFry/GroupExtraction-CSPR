@@ -325,20 +325,22 @@ f = open('export_chromo_data.csv','w+')
 f.close()
 
 seeds = []
-with open(seed_file, 'r') as f:
-    for line in f:
-        line = line.strip('\n')
-        seeds.append(int(line))
+if seed_file == 'top10':
+    for w in sorted(parser.repeats, key=parser.repeats.get, reverse=True)[:10]:
+        seeds.append(w)
+else:
+    with open(seed_file, 'r') as f:
+        for line in f:
+            line = line.strip('\n')
+            seeds.append(int(line))
 
 seqLength = int(parser.endo_info[endo][1])
 seed = str(parser.decompress64(seeds[0], slength=seqLength, toseq=True))
-print(seed)
 parser.chro_bar_data(seed, endo)
 
 for seed in seeds:
     seqLength = int(parser.endo_info[endo][1])
     dec_seed = str(parser.decompress64(seed, slength=seqLength, toseq=True))
-    print(dec_seed)
     parser.chro_bar_data(dec_seed, endo)
 
     groups = {}
